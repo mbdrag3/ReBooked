@@ -4,6 +4,7 @@ const { Schema } = mongoose;
 const bcrypt = require('bcrypt');
 const Order = require('./Order');
 
+
 const userSchema = new Schema({
   firstName: {
     type: String,
@@ -25,6 +26,18 @@ const userSchema = new Schema({
     required: true,
     minlength: 5
   },
+  comments: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Comment'
+    }
+  ],
+  books: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Book'
+    }
+],
   orders: [Order.schema]
 });
 

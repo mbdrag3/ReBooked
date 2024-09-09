@@ -7,12 +7,16 @@ const orderSchema = new Schema({
     type: Date,
     default: Date.now
   },
-  products: [
+  books: [
     {
       type: Schema.Types.ObjectId,
-      ref: 'Product'
+      ref: 'Book'
     }
-  ]
+  ],
+  userId: {
+      type: Schema.Types.ObjectId,
+      ref: 'User'
+  }
 });
 
 const Order = mongoose.model('Order', orderSchema);
