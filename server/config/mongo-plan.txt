@@ -1,0 +1,42 @@
+
+Users
+
+    id
+    first name - string
+    last name - string
+    email - string
+    password - string
+    bookIds - [] (Books listed by user)
+    orders - [] (Orders from this user)
+
+Orders 
+
+    id
+    userid?
+    date
+    books (Products)
+
+
+Books
+
+    id
+    name - string
+    author - string
+    image - string
+    price - number
+    category - reference
+    condition - string
+    Comments - reference
+    Userid
+
+Comments
+
+    id - 
+    userid -
+    comment - 
+
+
+Category
+
+    name - string
+
