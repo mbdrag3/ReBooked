@@ -9,6 +9,13 @@
   --spacing-two: calc(1rem);
 }
 
+:root {
+  --raisin-black: #22252f;
+  --snow: #faf0f0;
+  --cool-grey: #7d869c;
+  --mint: #61c9a8;
+}
+
 * {
   box-sizing: border-box;
 }
