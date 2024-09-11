@@ -1,13 +1,16 @@
-const { User, Product, Category, Order } = require('../models');
+const { User, Book, Category, Order, Comment } = require('../models');
 const { signToken, AuthenticationError } = require('../utils/auth');
 const stripe = require('stripe')('sk_test_4eC39HqLyjWDarjtT1zdp7dc');
 
 const resolvers = {
   Query: {
+    // Find all categories
     categories: async () => {
       return await Category.find();
     },
-    products: async (parent, { category, name }) => {
+
+    // Find books with optional filtering
+    books: async (parent, { category, name }) => {
       const params = {};
 
       if (category) {
@@ -16,33 +19,41 @@ const resolvers = {
 
       if (name) {
         params.name = {
-          $regex: name
+          $regex: name,
+          $options: 'i' // case-insensitive
         };
       }
 
-      return await Product.find(params).populate('category');
+      return await Book.find(params).populate('category').populate('userId').populate('comment');
     },
-    product: async (parent, { _id }) => {
-      return await Product.findById(_id).populate('category');
+
+    // Single book by ID
+    book: async (parent, { _id }) => {
+      return await Book.findById(_id).populate('category').populate('userId').populate('comment');
     },
+
+    // Find logged-in user
     user: async (parent, args, context) => {
       if (context.user) {
-        const user = await User.findById(context.user._id).populate({
-          path: 'orders.products',
-          populate: 'category'
-        });
-
-        user.orders.sort((a, b) => b.purchaseDate - a.purchaseDate);
+        const user = await User.findById(context.user._id)
+          .populate({
+            path: 'orders.books',
+            populate: 'category'
+          })
+          .populate('comments')
+          .populate('books');
 
         return user;
       }
 
       throw AuthenticationError;
     },
+
+    // Find an order by ID
     order: async (parent, { _id }, context) => {
       if (context.user) {
         const user = await User.findById(context.user._id).populate({
-          path: 'orders.products',
+          path: 'orders.books',
           populate: 'category'
         });
 
@@ -51,26 +62,32 @@ const resolvers = {
 
       throw AuthenticationError;
     },
-    checkout: async (parent, args, context) => {
+
+    comments: async (parent, { bookId }) => {
+      return await Comment.find({ bookId }).populate('userId')
+    },
+
+    // Stripe checkout session
+    checkout: async (parent, { books }, context) => {
       const url = new URL(context.headers.referer).origin;
-      await Order.create({ products: args.products.map(({ _id }) => _id) });
-      // eslint-disable-next-line camelcase
+
       const line_items = [];
 
-      // eslint-disable-next-line no-restricted-syntax
-      for (const product of args.products) {
-        line_items.push({
+      for (let i = 0; i < books.length; i++) {
+        const book = await Book.findById(books[i]._id);
+        const product = {
           price_data: {
             currency: 'usd',
             product_data: {
-              name: product.name,
-              description: product.description,
-              images: [`${url}/images/${product.image}`]
+              name: book.name,
+              description: book.condition,
+              images: [`${url}/images/${book.image}`]
             },
-            unit_amount: product.price * 100,
+            unit_amount: book.price * 100,
           },
-          quantity: product.purchaseQuantity,
-        });
+          quantity: books[i].purchaseQuantity,
+        };
+        line_items.push(product);
       }
 
       const session = await stripe.checkout.sessions.create({
@@ -84,36 +101,84 @@ const resolvers = {
       return { session: session.id };
     },
   },
+
   Mutation: {
+    // Register a new user
     addUser: async (parent, args) => {
       const user = await User.create(args);
       const token = signToken(user);
 
       return { token, user };
     },
-    addOrder: async (parent, { products }, context) => {
+
+    // Add an order for logged-in user
+    addOrder: async (parent, { books }, context) => {
       if (context.user) {
-        const order = new Order({ products });
-
+        const order = new Order({ books, userId: context.user._id });
         await User.findByIdAndUpdate(context.user._id, { $push: { orders: order } });
-
+        console.log(order);
         return order;
       }
-
       throw AuthenticationError;
     },
+
+    addCategory: async (parent, { name }, context) => {
+      if (context.user) {  // If you want only authenticated users to add categories
+        const newCategory = await Category.create({ name });
+        return newCategory;
+      }
+      throw AuthenticationError;
+    },
+
+    addBook: async (parent, { name, author, condition, image, price, category }, context) => {
+      if (context.user) {
+        const newBook = await Book.create({
+          name,
+          author,
+          condition,
+          image,
+          price,
+          category,
+          userId: context.user._id,
+        });
+  
+        return await Book.findById(newBook._id).populate('category');;
+      }
+  
+      throw AuthenticationError;
+    },
+  
+
+    // Update the current user's details
     updateUser: async (parent, args, context) => {
       if (context.user) {
         return await User.findByIdAndUpdate(context.user._id, args, { new: true });
       }
-
       throw AuthenticationError;
     },
-    updateProduct: async (parent, { _id, quantity }) => {
-      const decrement = Math.abs(quantity) * -1;
 
-      return await Product.findByIdAndUpdate(_id, { $inc: { quantity: decrement } }, { new: true });
+    addComment: async (parent, { bookId, comment }, context) => {
+      if (context.user) {
+        const newComment = await Comment.create({
+          comment,
+          bookId,
+          userId: context.user._id,
+        });
+
+        await Book.findByIdAndUpdate(bookId, {$push: { comment: newComment._id } })
+
+        return newComment;
+      }
+      throw AuthenticationError;
     },
+
+    // Update book quantity
+    updateBook: async (parent, { _id, quantity }) => {
+      const decrement = Math.abs(quantity) * -1;
+      return await Book.findByIdAndUpdate(_id, { $inc: { quantity: decrement } }, { new: true });
+    },
+
+    // Login a user
     login: async (parent, { email, password }) => {
       const user = await User.findOne({ email });
 
@@ -126,11 +191,11 @@ const resolvers = {
       if (!correctPw) {
         throw AuthenticationError;
       }
-
+      console.log(user);
       const token = signToken(user);
 
       return { token, user };
-    }
+    },
   }
 };
 
