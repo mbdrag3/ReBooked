@@ -8,9 +8,9 @@ import {
   REMOVE_FROM_CART,
   UPDATE_CART_QUANTITY,
   ADD_TO_CART,
-  UPDATE_PRODUCTS,
+  UPDATE_BOOKS,
 } from '../utils/actions';
-import { QUERY_PRODUCTS } from '../utils/queries';
+import { QUERY_ALL_BOOKS } from '../utils/queries';
 import { idbPromise } from '../utils/helpers';
 import spinner from '../assets/spinner.gif';
 
@@ -18,48 +18,48 @@ function Detail() {
   const [state, dispatch] = useStoreContext();
   const { id } = useParams();
 
-  const [currentProduct, setCurrentProduct] = useState({});
+  const [currentBook, setCurrentBook] = useState({});
 
-  const { loading, data } = useQuery(QUERY_PRODUCTS);
+  const { loading, data } = useQuery(QUERY_ALL_BOOKS);
 
-  const { products, cart } = state;
+  const { books, cart } = state;
 
   useEffect(() => {
     // already in global store
-    if (products.length) {
-      const product = products.find((product) => product._id === id);
+    if (books.length) {
+      const book = books.find((book) => book._id === id);
 
       const item = {
-        image: product.image,
-        name: product.name,
-        _id: product._id,
-        price: product.price,
-        quantity: product.quantity,
+        image: book.image,
+        name: book.name,
+        _id: book._id,
+        price: book.price,
+        quantity: book.quantity,
       };
       
-      setCurrentProduct(item);
+      setCurrentBook(item);
     }
     // retrieved from server
     else if (data) {
       dispatch({
-        type: UPDATE_PRODUCTS,
-        products: data.products,
+        type: UPDATE_BOOKS,
+        books: data.books,
       });
 
-      data.products.forEach((product) => {
-        idbPromise('products', 'put', product);
+      data.books.forEach((book) => {
+        idbPromise('books', 'put', book);
       });
     }
     // get cache from idb
     else if (!loading) {
-      idbPromise('products', 'get').then((indexedProducts) => {
+      idbPromise('books', 'get').then((indexedBooks) => {
         dispatch({
-          type: UPDATE_PRODUCTS,
-          products: indexedProducts,
+          type: UPDATE_BOOKS,
+          products: indexedBooks,
         });
       });
     }
-  }, [products, data, loading, dispatch, id]);
+  }, [books, data, loading, dispatch, id]);
 
   const addToCart = () => {
     const itemInCart = cart.find((cartItem) => cartItem._id === id);
@@ -76,36 +76,36 @@ function Detail() {
     } else {
       dispatch({
         type: ADD_TO_CART,
-        product: { ...currentProduct, purchaseQuantity: 1 },
+        book: { ...currentBook, purchaseQuantity: 1 },
       });
-      idbPromise('cart', 'put', { ...currentProduct, purchaseQuantity: 1 });
+      idbPromise('cart', 'put', { ...currentBook, purchaseQuantity: 1 });
     }
   };
 
   const removeFromCart = () => {
     dispatch({
       type: REMOVE_FROM_CART,
-      _id: currentProduct._id,
+      _id: currentBook._id,
     });
 
-    idbPromise('cart', 'delete', { ...currentProduct });
+    idbPromise('cart', 'delete', { ...currentBook });
   };
 
   return (
     <>
-      {currentProduct && cart ? (
+      {currentBook && cart ? (
         <div className="container my-1">
-          <Link to="/">← Back to Products</Link>
+          <Link to="/">← Back to Books</Link>
 
-          <h2>{currentProduct.name}</h2>
+          <h2>{currentBook.name}</h2>
 
-          <p>{currentProduct.description}</p>
+          <p>{currentBook.description}</p>
 
           <p>
-            <strong>Price:</strong>${currentProduct.price}{' '}
+            <strong>Price:</strong>${currentBook.price}{' '}
             <button onClick={addToCart}>Add to Cart</button>
             <button
-              disabled={!cart.find((p) => p._id === currentProduct._id)}
+              disabled={!cart.find((p) => p._id === currentBook._id)}
               onClick={removeFromCart}
             >
               Remove from Cart
@@ -113,8 +113,8 @@ function Detail() {
           </p>
 
           <img
-            src={`/images/${currentProduct.image}`}
-            alt={currentProduct.name}
+            src={`/images/${currentBook.image}`}
+            alt={currentBook.name}
           />
         </div>
       ) : null}
