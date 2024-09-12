@@ -3,55 +3,59 @@ import BookItem from '../BookItem';
 import { useStoreContext } from '../../utils/GlobalState';
 import { UPDATE_BOOKS } from '../../utils/actions';
 import { useQuery } from '@apollo/client';
-import { QUERY_BOOKS } from '../../utils/queries';
+import { QUERY_ALL_BOOKS } from '../../utils/queries';
 import { idbPromise } from '../../utils/helpers';
 import spinner from '../../assets/spinner.gif';
+
 
 function BookList({ filteredBooks = [] }) {
   const [state, dispatch] = useStoreContext();
 
   const { currentCategory } = state;
 
-  const { loading, data } = useQuery(QUERY_BOOKS);
-
+  const { loading, data } = useQuery(QUERY_ALL_BOOKS);
+ 
   useEffect(() => {
     if (data) {
       dispatch({
         type: UPDATE_BOOKS,
-        books: data.books,
+        books: data.allBooks,
       });
-      data.books.forEach((book) => {
+      data.allBooks.forEach((book) => {
         idbPromise('books', 'put', book);
       });
     } else if (!loading) {
-      idbPromise('books', 'get').then((books) => {
+      idbPromise('books', 'get').then((book) => {
         dispatch({
           type: UPDATE_BOOKS,
-          books: books,
+          books: book,
         });
       });
     }
   }, [data, loading, dispatch]);
 
   function filteredBooksByCategory() {
+    if (loading || !data) {
+      return [];
+    }
     if (!currentCategory) {
-      return state.books;
+      return data.allBooks;
     }
 
-    return state.books.filter(
+    return data.allBooks.filter(
       (book) => book.category._id === currentCategory
     );
   }
 
-  const booksToDisplay = filteredBooks.length ? filteredBooks : filteredBooksByCategory();
-
+  const booksToDisplay = filteredBooksByCategory();
+console.log("Books: ", booksToDisplay);
   return (
     <div className="my-2">
       <h2>Our Books:</h2>
-      {state.books.length ? (
+      {booksToDisplay.length ? (
         <div className="flex-row">
           {booksToDisplay.map((book) => (
-            <BookItemItem
+            <BookItem
               key={book._id}
               _id={book._id}
               image={book.image}

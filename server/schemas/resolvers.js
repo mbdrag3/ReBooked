@@ -9,8 +9,12 @@ const resolvers = {
       return await Category.find();
     },
 
+    allBooks: async (parent, { category, name }) => {
+      return await Book.find();
+      },
+
     // Find books with optional filtering
-    books: async (parent, { category, name }) => {
+    getBooksByCategory: async (parent, { category, name }) => {
       const params = {};
 
       if (category) {
@@ -28,7 +32,7 @@ const resolvers = {
     },
 
     // Single book by ID
-    book: async (parent, { _id }) => {
+    getBookByName: async (parent, { _id }) => {
       return await Book.findById(_id).populate('category').populate('userId').populate('comment');
     },
 
