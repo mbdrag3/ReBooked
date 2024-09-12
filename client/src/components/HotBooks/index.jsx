@@ -13,7 +13,11 @@ function CategoryMenu() {
 
   const { categories } = state;
 
-  const { loading, data: categoryData } = useQuery(QUERY_CATEGORIES);
+  const { loading, data: categoryData } = useQuery(QUERY_CATEGORIES,{
+    fetchPolicy: "no-cache"
+  });
+
+  console.log(categoryData)
 
   useEffect(() => {
     if (categoryData) {
@@ -21,16 +25,16 @@ function CategoryMenu() {
         type: UPDATE_CATEGORIES,
         categories: categoryData.categories,
       });
-      categoryData.categories.forEach((category) => {
-        idbPromise('categories', 'put', category);
-      });
+      // categoryData.categories.forEach((category) => {
+      //   idbPromise('categories', 'put', category);
+      // });
     } else if (!loading) {
-      idbPromise('categories', 'get').then((categories) => {
-        dispatch({
-          type: UPDATE_CATEGORIES,
-          categories: categories,
-        });
-      });
+      // idbPromise('categories', 'get').then((categories) => {
+      //   dispatch({
+      //     type: UPDATE_CATEGORIES,
+      //     categories: categories,
+      //   });
+      // });
     }
   }, [categoryData, loading, dispatch]);
 

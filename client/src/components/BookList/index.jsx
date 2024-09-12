@@ -21,16 +21,16 @@ function BookList({ filteredBooks = [] }) {
         type: UPDATE_BOOKS,
         books: data.allBooks,
       });
-      data.allBooks.forEach((book) => {
-        idbPromise('books', 'put', book);
-      });
+      // data.allBooks.forEach((book) => {
+      //   idbPromise('books', 'put', book);
+      // });
     } else if (!loading) {
-      idbPromise('books', 'get').then((book) => {
-        dispatch({
-          type: UPDATE_BOOKS,
-          books: book,
-        });
-      });
+      // idbPromise('books', 'get').then((book) => {
+        // dispatch({
+        //   type: UPDATE_BOOKS,
+        //   books: book,
+        // });
+      // });
     }
   }, [data, loading, dispatch]);
 

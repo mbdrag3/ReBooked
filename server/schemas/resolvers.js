@@ -6,7 +6,9 @@ const resolvers = {
   Query: {
     // Find all categories
     categories: async () => {
-      return await Category.find();
+      const allCategories = await Category.find()
+      console.log(allCategories)
+      return allCategories;
     },
 
     allBooks: async (parent, { category, name }) => {
