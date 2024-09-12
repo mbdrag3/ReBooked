@@ -4,20 +4,29 @@ const typeDefs = `
     name: String
   }
 
-  type Product {
+  type Book {
     _id: ID
     name: String
-    description: String
+    author: String
+    condition: String
     image: String
-    quantity: Int
     price: Float
     category: Category
+    comment: [Comment]
+    userId: User
+  }
+
+  type Comment {
+    _id: ID
+    comment: String
+    userId: User
   }
 
   type Order {
     _id: ID
     purchaseDate: String
-    products: [Product]
+    books: [Book]
+    userId: User
   }
 
   type User {
@@ -26,6 +35,8 @@ const typeDefs = `
     lastName: String
     email: String
     orders: [Order]
+    comments: [Comment]
+    books: [Book]
   }
 
   type Checkout {
@@ -37,7 +48,7 @@ const typeDefs = `
     user: User
   }
 
-  input ProductInput {
+  input BookInput {
     _id: ID
     purchaseQuantity: Int
     name: String
@@ -48,19 +59,23 @@ const typeDefs = `
 
   type Query {
     categories: [Category]
-    products(category: ID, name: String): [Product]
-    product(_id: ID!): Product
+    books(category: ID, name: String): [Book]
+    book(_id: ID!): Book
     user: User
     order(_id: ID!): Order
-    checkout(products: [ProductInput]): Checkout
+    comments(bookId: ID!): [Comment]
+    checkout(books: [BookInput]): Checkout
   }
-
+  
   type Mutation {
     addUser(firstName: String!, lastName: String!, email: String!, password: String!): Auth
-    addOrder(products: [ID]!): Order
+    addBook(name: String!, author: String!, condition: String!, image: String, price: Float!, category: ID!): Book
+    addOrder(books: [ID]!): Order
     updateUser(firstName: String, lastName: String, email: String, password: String): User
-    updateProduct(_id: ID!, quantity: Int!): Product
+    updateBook(_id: ID!, quantity: Int!): Book
+    addComment(bookId: ID!, comment: String!): Comment
     login(email: String!, password: String!): Auth
+    addCategory(name: String!): Category
   }
 `;
 

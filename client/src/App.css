@@ -1,3 +1,10 @@
+:root {
+  --raisin-black: #22252f;
+  --snow: #faf0f0;
+  --cool-grey: #7d869c;
+  --mint: #61c9a8;
+}
+
 #root {
   max-width: 1280px;
   margin: 0 auto;
