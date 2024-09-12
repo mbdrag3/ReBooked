@@ -52,7 +52,7 @@ const Home = () => {
         <input
           type="text"
           pleaceholder="search book title..."
-          vlaue={ searchTerm }
+          value={ searchTerm }
           onChange={ handleInputChange }
         />
         <button onClick={handleSearch}>Search</button>
