@@ -62,6 +62,7 @@ const typeDefs = `
     allBooks: [Book]
     getBooksByCategory(category: ID, name: String): [Book]
     getBookByName(_id: ID!): Book
+    getBookById(_id: ID!): Book
     user: User
     order(_id: ID!): Order
     comments(bookId: ID!): [Comment]

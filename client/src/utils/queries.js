@@ -76,6 +76,31 @@ export const QUERY_CHECKOUT = gql`
   }
 `;
 
+export const QUERY_BOOKS_BY_ID = gql`
+query AllBooks($id: ID!) {
+  getBookById(_id: $id) {
+    name
+    author
+    category {
+      name
+    }
+    condition
+    image
+    price
+    userId {
+      firstName
+      lastName
+    }
+    comment {
+      comment
+      userId {
+        firstName
+      }
+    }
+  }
+}
+`
+
 export const QUERY_USER = gql`
   {
     user {
