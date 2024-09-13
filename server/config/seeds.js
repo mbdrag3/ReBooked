@@ -1,40 +1,18 @@
 const mongoose = require('mongoose');
-const Book = require('../models/Book');
-const Category = require('../models/Category');
-const User = require('../models/User');
+const Book = require('./path/to/your/bookModel'); // Adjust the path as needed
+const Category = require('./path/to/your/categoryModel'); // Adjust the path as needed
+const User = require('./path/to/your/userModel'); // Adjust the path as needed
 
-const dbURI = 'mongodb://localhost:27017/yourDatabaseName';
-mongoose.connect(dbURI)
+const dbURI = 'mongodb://localhost:27017/yourDatabaseName'; // Adjust to your database URI
+mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('Database connected'))
   .catch(err => console.log(err));
 
 const seedBooks = async () => {
   try {
-    let categories = await Category.find({});
-    let users = await User.find({});
-
-    // Seed default categories and users if they don't exist
-    if (categories.length === 0) {
-      const defaultCategories = [
-        { name: 'Programming' },
-        { name: 'Software Development' },
-        { name: 'Computer Science' }
-      ];
-      await Category.insertMany(defaultCategories);
-      categories = await Category.find({});
-      console.log('Default categories seeded');
-    }
-
-    if (users.length === 0) {
-      const defaultUsers = [
-        { firstName: 'John', lastName: 'Doe', email: 'john@example.com', password: 'password123' },
-        { firstName: 'Jane', lastName: 'Smith', email: 'jane@example.com', password: 'password123' },
-        { firstName: 'Alice', lastName: 'Johnson', email: 'alice@example.com', password: 'password123' }
-      ];
-      await User.insertMany(defaultUsers);
-      users = await User.find({});
-      console.log('Default users seeded');
-    }
+    // Make sure categories and users are created first and use their ObjectIds
+    const categories = await Category.find({});
+    const users = await User.find({});
 
     const books = [
       {
@@ -44,7 +22,7 @@ const seedBooks = async () => {
         image: 'https://example.com/image1.jpg',
         price: 50,
         category: categories[0]._id,
-        comment: [],
+        comment: [], // Assume comments are created elsewhere
         userId: users[0]._id
       },
       {
@@ -54,7 +32,7 @@ const seedBooks = async () => {
         image: 'https://example.com/image2.jpg',
         price: 30,
         category: categories[1]._id,
-        comment: [],
+        comment: [], // Assume comments are created elsewhere
         userId: users[1]._id
       },
       {
@@ -64,7 +42,7 @@ const seedBooks = async () => {
         image: 'https://example.com/image3.jpg',
         price: 40,
         category: categories[2]._id,
-        comment: [],
+        comment: [], // Assume comments are created elsewhere
         userId: users[2]._id
       }
     ];
