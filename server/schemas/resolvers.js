@@ -35,8 +35,31 @@ const resolvers = {
 
     // Single book by ID
     getBookByName: async (parent, { _id }) => {
-      return await Book.findById(_id).populate('category').populate('userId').populate('comment');
+      return await Book.findById(_id)
+        .populate('category')
+        .populate('userId')
+        .populate({
+          path: 'comment',
+          populate: {
+            path: 'userId',
+            select: 'firstName lastName'
+          }
+        });
     },
+
+    //
+    getBookById: async (parent, { _id }) => {
+      return await Book.findById(_id)
+        .populate('category')
+        .populate('userId')
+        .populate({
+          path: 'comment',
+          populate: {
+            path: 'userId',
+            select: 'firstName lastName'
+          }
+        });
+    },    
 
     // Find logged-in user
     user: async (parent, args, context) => {

@@ -12,6 +12,7 @@ import Signup from './pages/Signup';
 import Success from './pages/Success';
 import OrderHistory from './pages/OrderHistory';
 import AddBookForm from './pages/AddTextbook.jsx';
+import BookDetails from './pages/BookDetails.jsx';
 
 const router = createBrowserRouter([
   {
@@ -42,8 +43,8 @@ const router = createBrowserRouter([
         path: '/about',
         element: <About />
       }, {
-        path: '/products/:id',
-        element: <Detail />
+        path: '/books/:id',
+        element: <BookDetails />
       },
       {
         path: '/addbook',
