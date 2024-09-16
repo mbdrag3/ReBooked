@@ -188,18 +188,22 @@ const resolvers = {
 
     addComment: async (parent, { bookId, comment }, context) => {
       if (context.user) {
+        // Create the new comment
         const newComment = await Comment.create({
           comment,
           bookId,
           userId: context.user._id,
         });
-
-        await Book.findByIdAndUpdate(bookId, {$push: { comment: newComment._id } })
-
-        return newComment;
+    
+        // Update the Book to include this new comment
+        await Book.findByIdAndUpdate(bookId, { $push: { comment: newComment._id } });
+    
+        // Populate the userId field to return the user details along with the comment
+        return await newComment.populate('userId', 'firstName lastName'); // Populate userId to return user's first and last name
       }
       throw AuthenticationError;
     },
+    
 
     // Update book quantity
     updateBook: async (parent, { _id, quantity }) => {

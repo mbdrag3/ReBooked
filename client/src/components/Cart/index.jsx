@@ -48,10 +48,13 @@ const Cart = () => {
   function calculateTotal() {
     let sum = 0;
     state.cart.forEach((item) => {
-      sum += item.price * item.purchaseQuantity;
+      if (item && item.price && item.purchaseQuantity) {
+        sum += item.price * item.purchaseQuantity;
+      }
     });
     return sum.toFixed(2);
   }
+  
 
   // When the submit checkout method is invoked, loop through each item in the cart
   // Add each item id to the productIds array and then invoke the getCheckout query passing an object containing the id for all our products
@@ -84,9 +87,14 @@ const Cart = () => {
       <h2>Shopping Cart</h2>
       {state.cart.length ? (
         <div>
-          {state.cart.map((item) => (
-            <CartItem key={item._id} item={item} />
+          {state.cart.map((item, index) => (
+            item && item._id ? (
+              <CartItem key={item._id} item={item} />
+            ) : (
+              <p key={index}>An item in the cart is missing information.</p>
+            )
           ))}
+
 
           <div className="flex-row space-between">
             <strong>Total: ${calculateTotal()}</strong>
