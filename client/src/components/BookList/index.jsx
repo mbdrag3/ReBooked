@@ -6,31 +6,20 @@ import { useQuery } from '@apollo/client';
 import { QUERY_ALL_BOOKS } from '../../utils/queries';
 import { idbPromise } from '../../utils/helpers';
 import spinner from '../../assets/spinner.gif';
-
+import NoImage from "../../assets/no-image.jpg"; // Import the fallback image
 
 function BookList({ filteredBooks = [] }) {
   const [state, dispatch] = useStoreContext();
-
   const { currentCategory } = state;
 
   const { loading, data } = useQuery(QUERY_ALL_BOOKS);
- 
+
   useEffect(() => {
     if (data) {
       dispatch({
         type: UPDATE_BOOKS,
         books: data.allBooks,
       });
-      // data.allBooks.forEach((book) => {
-      //   idbPromise('books', 'put', book);
-      // });
-    } else if (!loading) {
-      // idbPromise('books', 'get').then((book) => {
-        // dispatch({
-        //   type: UPDATE_BOOKS,
-        //   books: book,
-        // });
-      // });
     }
   }, [data, loading, dispatch]);
 
@@ -48,7 +37,7 @@ function BookList({ filteredBooks = [] }) {
   }
 
   const booksToDisplay = filteredBooksByCategory();
-console.log("Books: ", booksToDisplay);
+
   return (
     <div className="my-2">
       <h2>Our Books:</h2>
@@ -58,7 +47,7 @@ console.log("Books: ", booksToDisplay);
             <BookItem
               key={book._id}
               _id={book._id}
-              image={book.image}
+              image={book.image || NoImage} // Use fallback image if book.image is not available
               name={book.name}
               price={book.price}
               quantity={book.quantity}
@@ -66,7 +55,7 @@ console.log("Books: ", booksToDisplay);
           ))}
         </div>
       ) : (
-        <h3>uh oh, we don't have that in stock right now.</h3>
+        <h3>Uh oh, we don't have that in stock right now.</h3>
       )}
       {loading ? <img src={spinner} alt="loading" /> : null}
     </div>

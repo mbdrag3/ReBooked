@@ -218,8 +218,74 @@ input:focus {
   color: var(--error);
 }
 
+.book-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding-top: 6rem;
+}
+
+.book-content {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 80%;
+  margin-bottom: 20px;
+}
+
+.book-image {
+  flex: 1;
+  margin-right: 20px;
+}
+
+.book-details {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; 
+  align-items: flex-start;
+  height: auto; 
+  min-height: 400px; 
+  position: relative; 
+}
+
+.book-owner {
+  margin-top: auto; 
+  width: 100%; 
+}
+
+.book-details button {
+  margin-top: 10px;
+  align-self: flex-start;
+}
+
+.comments {
+  width: 80%;
+  margin-top: 20px;
+}
+
+.comments textarea {
+  width: 100%;
+  height: 4rem;
+  margin-bottom: 10px;
+}
+
+.comments ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.comments ul li {
+  margin-bottom: 10px;
+}
+
 @media screen and (max-width: 768px) {
-  .card {
-    width: 100%;
+  .book-content {
+    flex-direction: column;
+  }
+
+  .book-details {
+    min-height: auto;
   }
 }
