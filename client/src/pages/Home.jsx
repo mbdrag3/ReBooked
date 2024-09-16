@@ -8,21 +8,23 @@ const Home = () => {
   const [books, setBooks] = useState([]); // storing fetched data
   const [filteredBooks, setFilteredBooks] = useState([]); // filtered books
 
-  const fetchedBooks = async () => {
-    try {
-      const response = await fetch('/api/PLACEHOLDER'); //current placeholder, needs to be updated
-      const data = await response.json();
-      setBooks(data);
-      setFilteredBooks(data);
-    } catch (error) {
-      console.error("Error fetching books:", error);
-    }
-  };
+  // Commented out for now
 
-  // Fetch books when the compenent mounts
-  useEffect(() => {
-    fetchedBooks();
-  }, []);
+  // const fetchedBooks = async () => {
+  //   try {
+  //     const response = await fetch('/api/PLACEHOLDER'); //current placeholder, needs to be updated
+  //     const data = await response.json();
+  //     setBooks(data);
+  //     setFilteredBooks(data);
+  //   } catch (error) {
+  //     console.error("Error fetching books:", error);
+  //   }
+  // };
+
+  // // Fetch books when the compenent mounts
+  // useEffect(() => {
+  //   fetchedBooks();
+  // }, []);
 
   const handleSearch = () => {
     const results = books.filter((book) =>
@@ -52,7 +54,7 @@ const Home = () => {
         <input
           type="text"
           pleaceholder="search book title..."
-          vlaue={ searchTerm }
+          value={ searchTerm }
           onChange={ handleInputChange }
         />
         <button onClick={handleSearch}>Search</button>

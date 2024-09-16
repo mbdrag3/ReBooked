@@ -1,3 +1,10 @@
+:root {
+  --raisin-black: #22252f;
+  --snow: #faf0f0;
+  --cool-grey: #7d869c;
+  --mint: #61c9a8;
+}
+
 .cart {
   position: fixed;
   top: 0;
@@ -5,18 +12,25 @@
   min-width: 20%;
   max-width: 30%;
   max-height: 60%;
-  background-color: var(--light);
+  background-color: var(--raisin-black);
   overflow: auto;
   padding: .5rem;
   box-shadow: 0 0 1rem rgba(0, 0, 0, .5);
   border-bottom-left-radius: .5rem;
+  color: var(--snow);
+  font-size: 1rem;
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .cart h2 {
-  font-size: 1.5rem;
+  font-size: 1.33rem;
   border-bottom: 1px solid var(--dark);
   padding-bottom: .5rem;
   margin: 1rem 0;
+}
+
+.cart h3 {
+  font-size: 1rem;
 }
 
 .cart .close {
@@ -24,7 +38,7 @@
   top: .5rem;
   right: .5rem;
   cursor: pointer;
-  color: var(--tertiary);
+  color: var(--mint);
 }
 
 .cart .close:hover {
@@ -35,9 +49,8 @@
   position: fixed;
   top: 2%;
   right: 1%;
-  font-size: 2rem;
+  font-size: 1rem;
   cursor: pointer;
-  background-color: var(--secondary);
   border-radius: 50%;
   padding: .25rem;
   width: 50px;
@@ -45,7 +58,7 @@
 }
 
 .cart-closed:hover {
-  transform: rotate(8deg);
+background-color: var(--mint);
 }
 
 .cart img {
