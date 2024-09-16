@@ -59,8 +59,10 @@ const typeDefs = `
 
   type Query {
     categories: [Category]
-    books(category: ID, name: String): [Book]
-    book(_id: ID!): Book
+    allBooks: [Book]
+    getBooksByCategory(category: ID, name: String): [Book]
+    getBookByName(_id: ID!): Book
+    getBookById(_id: ID!): Book
     user: User
     order(_id: ID!): Order
     comments(bookId: ID!): [Comment]

@@ -1,4 +1,21 @@
 import { useState } from "react";
+import { gql, useMutation } from "@apollo/client";
+
+// Define the GraphQL mutation for adding a book
+const ADD_BOOK_MUTATION = gql`
+  mutation AddBook($input: AddBookInput!) {
+    addBook(input: $input) {
+      id
+      name
+      author
+      condition
+      price
+      category
+      userId
+      imageUrl
+    }
+  }
+`;
 
 const AddBookForm = () => {
   const [formData, setFormData] = useState({
@@ -6,12 +23,15 @@ const AddBookForm = () => {
     author: "",
     condition: "",
     price: "",
-    subject: "",
+    category: "",
     userId: "",
     image: null,
   });
 
   const [imageUrl, setImageUrl] = useState("");
+
+  // GraphQL mutation hook from Apollo Client
+  const [addBook] = useMutation(ADD_BOOK_MUTATION);
 
   // Handle form input change
   const handleChange = (e) => {
@@ -34,53 +54,54 @@ const AddBookForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Upload image to Cloudinary
-    const formDataForCloudinary = new FormData();
-    formDataForCloudinary.append("file", formData.image);
-    formDataForCloudinary.append("upload_preset", "your_upload_preset"); // Replace with your Cloudinary upload preset
+    try {
+      // Upload image to Cloudinary
+      const formDataForCloudinary = new FormData();
+      formDataForCloudinary.append("file", formData.image);
+      formDataForCloudinary.append("upload_preset", "your_upload_preset"); // Replace with your Cloudinary upload preset
 
-    const cloudinaryResponse = await fetch(
-      "CLOUDINARY_URL=cloudinary://684392245889468:3Rs7pO2lxB_a68FnPqHksfHSUZs@dy9arp5xw", // Replace with your Cloudinary URL
-      {
-        method: "POST",
-        body: formDataForCloudinary,
+      const cloudinaryResponse = await fetch(
+        "https://api.cloudinary.com/v1_1/YOUR_CLOUD_NAME/image/upload", // Replace with your Cloudinary URL
+        {
+          method: "POST",
+          body: formDataForCloudinary,
+        }
+      );
+
+      const cloudinaryData = await cloudinaryResponse.json();
+      const uploadedImageUrl = cloudinaryData.secure_url;
+
+      // Set imageUrl state after uploading
+      setImageUrl(uploadedImageUrl);
+
+      // Prepare book data
+      const bookData = {
+        name: formData.name,
+        author: formData.author,
+        condition: formData.condition,
+        price: parseFloat(formData.price),
+        category: formData.category,
+        userId: formData.userId,
+        imageUrl: uploadedImageUrl, // Using the URL from Cloudinary
+      };
+
+      // Call the GraphQL mutation to add the book
+      const { data } = await addBook({
+        variables: { input: bookData },
+      });
+
+      if (data) {
+        alert("Textbook added successfully!");
       }
-    );
-    const cloudinaryData = await cloudinaryResponse.json();
-    const imageUrl = cloudinaryData.secure_url;
-      
-      /*!SECTION
-    // Send book data along with image URL to your backend API
-    const bookData = {
-      name: formData.name,
-      author: formData.author,
-      condition: formData.condition,
-      price: parseFloat(formData.price),
-      categoryID: formData.subject,
-      userId: formData.userId,
-      image: imageUrl,
-    };
-
-    const response = await fetch("http://localhost:3001/books", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(bookData),
-    });
-
-    if (response.ok) {
-      alert("Textbook added successfully!");
-    } else {
-      alert("Failed to add textbook.");
+    } catch (error) {
+      console.error("Error uploading image or adding book:", error);
+      alert("An error occurred. Please try again.");
     }
   };
-  */
 
   return (
     <form onSubmit={handleSubmit}>
-          <div>
-              
+      <div>
         <label>Book Name:</label>
         <input
           type="text"
@@ -124,10 +145,10 @@ const AddBookForm = () => {
       </div>
 
       <div>
-        <label>Subject</label>
+        <label>category:</label>
         <select
-          name="subject"
-          value={formData.subject}
+          name="category"
+          value={formData.category}
           onChange={handleChange}
         >
           <option value="science">Science</option>
@@ -147,5 +168,4 @@ const AddBookForm = () => {
     </form>
   );
 };
-
 export default AddBookForm;

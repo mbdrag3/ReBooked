@@ -1,5 +1,5 @@
 import {
-  UPDATE_PRODUCTS,
+  UPDATE_BOOKS,
   ADD_TO_CART,
   UPDATE_CART_QUANTITY,
   REMOVE_FROM_CART,
@@ -7,23 +7,25 @@ import {
   UPDATE_CATEGORIES,
   UPDATE_CURRENT_CATEGORY,
   CLEAR_CART,
-  TOGGLE_CART
+  TOGGLE_CART,
+  ADD_COMMENT
 } from "./actions";
 
 export const reducer = (state, action) => {
   switch (action.type) {
-    case UPDATE_PRODUCTS:
+    case UPDATE_BOOKS:
       return {
         ...state,
-        products: [...action.products],
+        products: [...action.books],
       };
 
-    case ADD_TO_CART:
-      return {
-        ...state,
-        cartOpen: true,
-        cart: [...state.cart, action.product],
-      };
+      case ADD_TO_CART:
+        return {
+          ...state,
+          cartOpen: true,
+          cart: [...state.cart, action.book],
+        };
+
 
     case ADD_MULTIPLE_TO_CART:
       return {
@@ -31,17 +33,19 @@ export const reducer = (state, action) => {
         cart: [...state.cart, ...action.products],
       };
 
-    case UPDATE_CART_QUANTITY:
-      return {
-        ...state,
-        cartOpen: true,
-        cart: state.cart.map(product => {
-          if (action._id === product._id) {
-            product.purchaseQuantity = action.purchaseQuantity
-          }
-          return product
-        })
-      };
+      case UPDATE_CART_QUANTITY:
+        console.log('UPDATE_CART_QUANTITY action:', action);
+        return {
+          ...state,
+          cartOpen: true,
+          cart: state.cart.map(product => {
+            if (action._id === product._id) {
+              product.purchaseQuantity = action.purchaseQuantity;
+            }
+            return product;
+          })
+        };
+      
 
     case REMOVE_FROM_CART:
       let newState = state.cart.filter(product => {
@@ -78,6 +82,12 @@ export const reducer = (state, action) => {
         ...state,
         currentCategory: action.currentCategory
       }
+
+      case ADD_COMMENT:
+        return {
+          ...state,
+          comments: [...state.comments, action.comment]
+        };
 
     default:
       return state;
