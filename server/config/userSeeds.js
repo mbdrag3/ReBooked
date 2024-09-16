@@ -30,7 +30,6 @@ const seedUsers = async () => {
   for (const user of users) {
     await User.create(user);
   }
-  await User.insertMany(users)
   console.log('User seeds inserted!');
 };
 
