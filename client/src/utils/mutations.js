@@ -49,5 +49,19 @@ export const ADD_USER = gql`
     }
   }
 `;
+
+export const ADD_COMMENT = gql`
+  mutation AddComment($bookId: ID!, $comment: String!) {
+    addComment(bookId: $bookId, comment: $comment) {
+      comment
+      userId {
+        firstName
+        lastName
+      }
+    }
+  }
+`
+
+
 //UPDATE_BOOKS
 //

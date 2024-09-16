@@ -4,7 +4,6 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 import App from './App.jsx';
 import Home from './pages/Home';
-import Detail from './pages/Detail';
 import NoMatch from './pages/NoMatch';
 import About from './pages/About';
 import Login from './pages/Login';
