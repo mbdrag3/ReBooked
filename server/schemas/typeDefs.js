@@ -34,6 +34,7 @@ const typeDefs = `
     firstName: String
     lastName: String
     email: String
+    password: String
     orders: [Order]
     comments: [Comment]
     books: [Book]
