@@ -33,9 +33,15 @@ const resolvers = {
       return await Book.find(params).populate('category').populate('userId').populate('comment');
     },
 
-    // Single book by ID
-    getBookByName: async (parent, { _id }) => {
-      return await Book.findById(_id)
+    // Single book by Name
+    getBookByName: async (parent, { name }) => {
+      console.log('Searching for book name:', name);  // Log the book name for debugging
+      // const book = await Book.findOne({
+      //   name: { $regex: new RegExp(name, 'i') }
+      // })
+      const book = await Book.find({
+        "name": { $regex: name, "$options":'i' }
+      })
         .populate('category')
         .populate('userId')
         .populate({
@@ -45,9 +51,17 @@ const resolvers = {
             select: 'firstName lastName'
           }
         });
+    console.log("name", book)
+      if (!book) {
+        console.log('Book not found');
+        throw new Error('Book not found');
+      }
+    
+      return book;
     },
+    
 
-    //
+
     getBookById: async (parent, { _id }) => {
       return await Book.findById(_id)
         .populate('category')

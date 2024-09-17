@@ -39,8 +39,8 @@ query getBooksByCategory($category: ID) {
 }
 `;
 export const QUERY_BOOKS_BY_NAME = gql`
-query Query($name: String) {
-  getBooksByName(name: $name) {
+query Query($name: String!) {
+  getBookByName(name: $name) {
     author
     category {
       name
