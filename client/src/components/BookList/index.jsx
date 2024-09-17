@@ -9,6 +9,7 @@ import spinner from '../../assets/spinner.gif';
 import NoImage from "../../assets/no-image.jpg"; // Import the fallback image
 
 function BookList({ filteredBooks = [] }) {
+  console.log('testbook', filteredBooks)
   const [state, dispatch] = useStoreContext();
   const { currentCategory } = state;
 
@@ -43,7 +44,7 @@ function BookList({ filteredBooks = [] }) {
       <h2>Our Books:</h2>
       {booksToDisplay.length ? (
         <div className="flex-row">
-          {booksToDisplay.map((book) => (
+          {filteredBooks.map((book) => (
             <BookItem
               key={book._id}
               _id={book._id}
