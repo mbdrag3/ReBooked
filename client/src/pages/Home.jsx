@@ -11,9 +11,11 @@ const Home = () => {
   const [filteredBooks, setFilteredBooks] = useState([]); // filtered books
 
   // Commented out for now
-  const [getBooksByName, { loading, data, error }] =useLazyQuery(QUERY_BOOKS_BY_NAME, {
+  const [getBookByName, { loading, data, error }] =useLazyQuery(QUERY_BOOKS_BY_NAME, {
     variables: { name: searchTerm }
   });
+
+  console.log('test', data)
 
   const handleInputChange = (event) => {
     setSearchTerm(event.target.value);
@@ -21,7 +23,7 @@ const Home = () => {
 
   const handleSearch = () => {
     if (searchTerm) {
-      getBooksByName();
+      getBookByName();
     }
   };
 
@@ -43,7 +45,7 @@ const Home = () => {
       handleSearch={handleSearch}
       />
 
-      <BookList filteredBooks={filteredBooks} />
+      <BookList filteredBooks={data?.getBookByName} />
       <Cart />
     </div>
   );
@@ -52,16 +54,16 @@ const Home = () => {
 export default Home;
 
 
-const fetchedBooks = async () => {
-  try {
-    const response = await fetch('/api/books'); //current placeholder, needs to be updated
-    const data = await response.json();
-    setBooks(data);
-    setFilteredBooks(data);
-  } catch (error) {
-    console.error("Error fetching books:", error);
-  }
-};
+// const fetchedBooks = async () => {
+//   try {
+//     const response = await fetch('/api/books'); //current placeholder, needs to be updated
+//     const data = await response.json();
+//     setBooks(data);
+//     setFilteredBooks(data);
+//   } catch (error) {
+//     console.error("Error fetching books:", error);
+//   }
+// };
 
 // Fetch books when the compenent mounts
 // useEffect(() => {
