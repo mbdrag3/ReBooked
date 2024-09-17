@@ -23,19 +23,19 @@ const App = () => {
 
 // Define the GraphQL mutation for adding a book
 const ADD_BOOK_MUTATION = gql`
-  mutation AddBook($input: AddBookInput!) {
-    addBook(input: $input) {
-      id
+mutation AddBook($name: String!, $author: String!, $condition: String!, $price: Float!, $category: ID!) {
+  addBook(name: $name, author: $author, condition: $condition, price: $price, category: $category) {
+    name
+    condition
+    category {
       name
-      author
-      condition
-      price
-      category
-      userId
-      imageUrl
     }
+    author
+    price
   }
+}
 `;
+
 
 const AddBookForm = () => {
   const [formData, setFormData] = useState({
@@ -43,8 +43,7 @@ const AddBookForm = () => {
     author: "",
     condition: "new", // Default value
     price: "",
-    category: "science", // Default value
-    userId: "",
+    category: "66e8bd76a8d071bc6cf655b9", // Default value,
     image: null,
   });
 
@@ -53,6 +52,7 @@ const AddBookForm = () => {
   // Handle form input change
   const handleChange = (e) => {
     const { name, value } = e.target;
+    console.log(name, value)
     setFormData({
       ...formData,
       [name]: value,
@@ -77,7 +77,9 @@ const AddBookForm = () => {
         alert("Please select an image file.");
         return;
       }
-  
+      
+
+
       // Create a FormData object to upload the image
       const imageData = new FormData();
       imageData.append("file", formData.image);
@@ -92,6 +94,16 @@ const AddBookForm = () => {
         }
       );
       const cloudinaryData = await cloudinaryResponse.json();
+
+      // const bookDataHardCode = {
+      //   name: "Science",
+      //   author: formData.author,
+      //   condition: formData.condition,
+      //   price: parseFloat(formData.price),
+      //   category: formData.category,
+      //   userId: formData.userId,
+      //   imageUrl: cloudinaryData.secure_url, // Image URL from Cloudinary
+      // };
   
       // Prepare book data with the uploaded image URL
       const bookData = {
@@ -106,7 +118,7 @@ const AddBookForm = () => {
   
       // Call the GraphQL mutation to add the book
       const { data } = await addBook({
-        variables: { input: bookData },
+        variables: {...bookData },
       });
   
       if (data) {
@@ -117,7 +129,7 @@ const AddBookForm = () => {
           author: "",
           condition: "new",
           price: "",
-          category: "science",
+          category: "",
           userId: "",
           image: null,
         });
@@ -154,6 +166,7 @@ const AddBookForm = () => {
       <div>
         <label>Condition:</label>
         <select
+        
           name="condition"
           value={formData.condition}
           onChange={handleChange}
@@ -177,16 +190,16 @@ const AddBookForm = () => {
         />
       </div>
       <div>
-        <label>Category:</label>
+        <label >Category:</label>
         <select
           name="category"
           value={formData.category}
           onChange={handleChange}
           required
         >
-          <option value="science">Science</option>
-          <option value="math">Math</option>
-          <option value="literature">Literature</option>
+          <option value="66e8bd76a8d071bc6cf655b9">Science</option>
+          <option value="66e8c0e0f2fc715d7d23352a">Math</option>
+          <option value="66e8c22af2fc715d7d23352c">Literature</option>
           <option value="social-studies">Social Studies</option>
           <option value="language">Language</option>
         </select>
