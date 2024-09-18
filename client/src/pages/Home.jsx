@@ -2,10 +2,11 @@ import BookList from "../components/BookList";
 import HotBooks from "../components/HotBooks";
 import Cart from "../components/Cart";
 import { useEffect, useState } from "react";
+import { QUERY_BOOKS_BY_NAME } from "../utils/queries";
+import { useLazyQuery } from "@apollo/client";
 
 const Home = () => {
   const [searchTerm, setSearchTerm] = useState(""); // managing search input
-  const [books, setBooks] = useState([]); // storing fetched data
   const [filteredBooks, setFilteredBooks] = useState([]); // filtered books
 
   // Commented out for now
@@ -26,25 +27,20 @@ const Home = () => {
   //   fetchedBooks();
   // }, []);
 
+  const [getBooksByName, { loading, data }] = useLazyQuery(QUERY_BOOKS_BY_NAME);
+
+
   const handleSearch = () => {
-    const results = books.filter((book) =>
-    book.anem.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setFilteredBooks(results);
+    getBooksByName({ variables: { name: searchTerm } }); 
   };
 
-  // Filter books based on the search term
+  if (data && data.getBookByName !== filteredBooks) {
+    setFilteredBooks(data.getBookByName);
+  }
+
   const handleInputChange = (event) => {
-    setSearchTerm(event.target.value);
+    setSearchTerm(event.target.value); 
   };
-
-  useEffect(() => {
-    const results = books.filter((book) =>
-      book.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setFilteredBooks(results);
-  }, [searchTerm, books]);
-
 
   return (
     <div className="container">
@@ -53,14 +49,19 @@ const Home = () => {
       <div className="search-bar">
         <input
           type="text"
-          pleaceholder="search book title..."
-          value={ searchTerm }
-          onChange={ handleInputChange }
+          placeholder="Search book title..."
+          value={searchTerm}
+          onChange={handleInputChange}
         />
         <button onClick={handleSearch}>Search</button>
       </div>
 
+      {/* Show loading spinner or message while loading */}
+      {loading && <p>Loading books...</p>}
+
+      {/* Render BookList with filtered books */}
       <BookList filteredBooks={filteredBooks} />
+
       <Cart />
     </div>
   );

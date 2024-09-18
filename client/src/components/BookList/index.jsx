@@ -6,37 +6,28 @@ import { useQuery } from '@apollo/client';
 import { QUERY_ALL_BOOKS } from '../../utils/queries';
 import { idbPromise } from '../../utils/helpers';
 import spinner from '../../assets/spinner.gif';
-import NoImage from "../../assets/no-image.jpg"; // Import the fallback image
+import NoImage from "../../assets/no-image.jpg";
 
 function BookList({ filteredBooks = [] }) {
   const [state, dispatch] = useStoreContext();
   const { currentCategory } = state;
 
-  const { loading, data } = useQuery(QUERY_ALL_BOOKS);
+  const { loading, data } = useQuery(QUERY_ALL_BOOKS, {
+    skip: filteredBooks.length > 0,
+  });
 
   useEffect(() => {
-    if (data) {
+    if (data && !filteredBooks.length) {
       dispatch({
         type: UPDATE_BOOKS,
         books: data.allBooks,
       });
     }
-  }, [data, loading, dispatch]);
+  }, [data, loading, dispatch,filteredBooks.length]);
 
-  function filteredBooksByCategory() {
-    if (loading || !data) {
-      return [];
-    }
-    if (!currentCategory) {
-      return data.allBooks;
-    }
-
-    return data.allBooks.filter(
-      (book) => book.category._id === currentCategory
-    );
-  }
-
-  const booksToDisplay = filteredBooksByCategory();
+  const booksToDisplay = filteredBooks.length > 0 
+    ? filteredBooks 
+    : (data?.allBooks || []);
 
   return (
     <div className="my-2">

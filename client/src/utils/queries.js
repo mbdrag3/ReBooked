@@ -19,21 +19,17 @@ export const QUERY_ALL_BOOKS=gql`
 `;
 
 export const QUERY_BOOKS_BY_CATEGORY = gql`
-query getBooksByCategory($category: ID) {
-  books(category: $category) {
+query GetBooksByCategory($category: ID, $name: String) {
+  getBooksByCategory(category: $category, name: $name) {
+    _id
     name
+    price
+    image
     author
+    condition
     category {
       _id
-    }
-    condition
-    image
-    price
-    userId {
-      _id
-    }
-    comment {
-      comment
+      name
     }
   }
 }
@@ -41,8 +37,10 @@ query getBooksByCategory($category: ID) {
 export const QUERY_BOOKS_BY_NAME = gql`
 query Query($name: String!) {
   getBookByName(name: $name) {
+    _id
     author
     category {
+      _id
       name
     }
     comment {
