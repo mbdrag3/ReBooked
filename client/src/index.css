@@ -281,11 +281,34 @@ input:focus {
 }
 
 @media screen and (max-width: 768px) {
+  .flex-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .flex-row > * {
+    flex: none;
+    width: 100%;
+  }
   .book-content {
     flex-direction: column;
+    align-items:center;
   }
 
   .book-details {
     min-height: auto;
+    align-items: center;
+  }
+
+  .book-content {
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+
+  .book-image {
+    margin-right: 0;
+    margin-bottom: 20px;
   }
 }
+
