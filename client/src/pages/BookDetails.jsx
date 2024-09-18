@@ -4,12 +4,12 @@ import { useQuery } from '@apollo/client';
 import { useParams } from "react-router-dom";
 import { useStoreContext } from '../utils/GlobalState';
 import { ADD_TO_CART, UPDATE_CART_QUANTITY, TOGGLE_CART } from '../utils/actions';
-import { ADD_COMMENT } from '../utils/mutations'; // Import the mutation
+import { ADD_COMMENT } from '../utils/mutations'; 
 import { idbPromise } from '../utils/helpers';
 import { QUERY_BOOKS_BY_ID } from "../utils/queries";
 import NoImage from "../assets/no-image.jpg";
 import Auth from '../utils/auth';
-import Cart from '../components/Cart';  // Ensure Cart is imported here
+import Cart from '../components/Cart';  
 
 const BookDetails = () => {
   const { id } = useParams();
@@ -41,7 +41,7 @@ const BookDetails = () => {
 
   const addToCart = () => {
     const _id = data.getBookById._id;
-    const bookImage = data.getBookById.image || NoImage; // Use the fallback image here
+    const bookImage = data.getBookById.image || NoImage; 
   
     const itemInCart = cart.find((cartItem) => cartItem._id === _id);
   
@@ -68,7 +68,7 @@ const BookDetails = () => {
           name: data.getBookById.name,
           price: data.getBookById.price,
           quantity: data.getBookById.quantity || 1,
-          image: bookImage, // Use the fallback image here
+          image: bookImage, 
           purchaseQuantity: 1
         }
       });
@@ -78,17 +78,11 @@ const BookDetails = () => {
         name: data.getBookById.name,
         price: data.getBookById.price,
         quantity: data.getBookById.quantity || 1,
-        image: bookImage, // Use the fallback image here
+        image: bookImage, 
         purchaseQuantity: 1
       });
     }
   };
-  
-  
-  
-  
-  
-
 
   const handleComment = async () => {
     try {
@@ -120,13 +114,17 @@ const BookDetails = () => {
 
           {/* Book Owner */}
           <div className="book-owner">
-            <h3>Posted by: {userId.firstName} {userId.lastName}</h3>
+            {userId ? (
+              <h3>Posted by: {userId.firstName} {userId.lastName}</h3>
+            ) : (
+              <h3>Posted by: Anonymous</h3>
+            )}
             {Auth.loggedIn() ? (
               <div>
                 <button onClick={addToCart}>Add to Cart</button>
               </div>
             ) : (
-              <p>** Please log in to add your cart. **</p>
+              <p>** Please log in to add to your cart. **</p>
             )}
           </div>
         </div>
