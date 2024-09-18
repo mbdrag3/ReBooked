@@ -33,10 +33,14 @@ import { UPDATE_USER } from '../../utils/mutations';
               password: profileData.password
             },
           });
+          alert("Profile details were updated!!!");
+          window.location.reload();
         };
 
       
         return (
+          <div>
+            <h3>My Details:</h3>
           <form onSubmit={handleSubmit}>
             <div>
               <label htmlFor="firstName">First Name:</label>
@@ -80,6 +84,7 @@ import { UPDATE_USER } from '../../utils/mutations';
             </div>
             <button type="submit">Save Details</button>
           </form>
+          </div>
         );
       };
       
