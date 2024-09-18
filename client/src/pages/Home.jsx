@@ -43,7 +43,6 @@ const Home = () => {
 
   return (
     <div className="container">
-      <HotBooks />
 
       <div className="search-bar">
         <input

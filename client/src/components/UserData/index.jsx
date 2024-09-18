@@ -22,7 +22,7 @@ const UserData = ({ firstName, lastName, email, password, books, orders}) => {
           <a><li onClick={()=>renderContent(event)}>My Details</li></a>
           <a ><li onClick={()=>renderContent(event)}>View Orders</li></a>
           <a onClick={()=>renderContent(event)}><li>My Listed Books</li></a>
-          <Link to="/add-book"><button>Add Book</button></Link>
+          <Link to="/add-book"><button>List book for sale</button></Link>
           </ul>
         </div>
         <div className="content">
