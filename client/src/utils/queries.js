@@ -19,30 +19,28 @@ export const QUERY_ALL_BOOKS=gql`
 `;
 
 export const QUERY_BOOKS_BY_CATEGORY = gql`
-query getBooksByCategory($category: ID) {
-  books(category: $category) {
+query GetBooksByCategory($category: ID, $name: String) {
+  getBooksByCategory(category: $category, name: $name) {
+    _id
     name
+    price
+    image
     author
+    condition
     category {
       _id
-    }
-    condition
-    image
-    price
-    userId {
-      _id
-    }
-    comment {
-      comment
+      name
     }
   }
 }
 `;
 export const QUERY_BOOKS_BY_NAME = gql`
-query Query($name: String) {
-  getBooksByName(name: $name) {
+query Query($name: String!) {
+  getBookByName(name: $name) {
+    _id
     author
     category {
+      _id
       name
     }
     comment {
@@ -75,6 +73,32 @@ export const QUERY_CHECKOUT = gql`
     }
   }
 `;
+
+export const QUERY_BOOKS_BY_ID = gql`
+query AllBooks($id: ID!) {
+  getBookById(_id: $id) {
+    _id
+    name
+    author
+    category {
+      name
+    }
+    condition
+    image
+    price
+    userId {
+      firstName
+      lastName
+    }
+    comment {
+      comment
+      userId {
+        firstName
+      }
+    }
+  }
+}
+`
 
 export const QUERY_USER = gql`
   {

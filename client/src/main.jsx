@@ -4,8 +4,11 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 import App from './App.jsx';
 import Home from './pages/Home';
+<<<<<<< HEAD
 import Profile from './pages/Profile';
 import Detail from './pages/Detail';
+=======
+>>>>>>> d588a1e3167928b06adeacc0f7ba0e7d2c8e5086
 import NoMatch from './pages/NoMatch';
 import About from './pages/About';
 import Login from './pages/Login';
@@ -13,6 +16,7 @@ import Signup from './pages/Signup';
 import Success from './pages/Success';
 import OrderHistory from './pages/OrderHistory';
 import AddBookForm from './pages/AddTextbook.jsx';
+import BookDetails from './pages/BookDetails.jsx';
 
 const router = createBrowserRouter([
   {
@@ -43,8 +47,8 @@ const router = createBrowserRouter([
         path: '/about',
         element: <About />
       }, {
-        path: '/products/:id',
-        element: <Detail />
+        path: '/books/:id',
+        element: <BookDetails />
       },
       {
         path: '/addbook',

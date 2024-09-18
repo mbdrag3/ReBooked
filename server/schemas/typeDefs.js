@@ -62,12 +62,14 @@ const typeDefs = `
     categories: [Category]
     allBooks: [Book]
     getBooksByCategory(category: ID, name: String): [Book]
-    getBookByName(_id: ID!): Book
+    getBookByName(name: String!): [Book]
+    getBookById(_id: ID!): Book
     user: User
     order(_id: ID!): Order
     comments(bookId: ID!): [Comment]
     checkout(books: [BookInput]): Checkout
   }
+  
   
   type Mutation {
     addUser(firstName: String!, lastName: String!, email: String!, password: String!): Auth
@@ -78,7 +80,7 @@ const typeDefs = `
     addComment(bookId: ID!, comment: String!): Comment
     login(email: String!, password: String!): Auth
     addCategory(name: String!): Category
-  }
+  } 
 `;
 
 module.exports = typeDefs;
