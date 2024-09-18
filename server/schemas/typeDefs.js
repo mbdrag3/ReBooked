@@ -79,7 +79,7 @@ const typeDefs = `
     addComment(bookId: ID!, comment: String!): Comment
     login(email: String!, password: String!): Auth
     addCategory(name: String!): Category
-  }
+  } 
 `;
 
 module.exports = typeDefs;
