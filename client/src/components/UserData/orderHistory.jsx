@@ -1,7 +1,7 @@
 const OrderHistory = (props) => {
 return (   
 <div className="orders-container">
- <h2>My orders:</h2>
+ <h3>My orders:</h3>
  {props.orders.map((order, index) => (
         <div key={index} className="order">
         <div>{order.purchaseDate}</div>

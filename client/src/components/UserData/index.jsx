@@ -3,6 +3,7 @@ import WelcomeToProfile from './welcometoprofile'
 import OrderHistory from './orderHistory'
 import MyDetails from './MyDetails'
 import ListedBooks from './ListedBooks'
+import './userdata.css'
 
 const UserData = ({ firstName, lastName, email, password, books, orders}) => {
   const [content, setContent]=useState(null);
@@ -14,8 +15,8 @@ const UserData = ({ firstName, lastName, email, password, books, orders}) => {
     
     return (
       <div className="profile-container">
-        <h3>Hi, {firstName} {lastName}</h3>
         <div className="sideBar">
+        <h3>Hi, {firstName} {lastName}</h3>
           <ul>
           <a><li onClick={()=>renderContent(event)}>My Details</li></a>
           <a ><li onClick={()=>renderContent(event)}>View Orders</li></a>
@@ -23,9 +24,10 @@ const UserData = ({ firstName, lastName, email, password, books, orders}) => {
           </ul>
         </div>
         <div className="content">
-      {content === 'My Details'  && <div><MyDetails firstName={firstName} lastName={lastName} email={email} password={password}></MyDetails></div>}
-      {content === 'View Orders' && <div><OrderHistory orders={orders}></OrderHistory></div>}
-      {content === 'My Listed Books' && <div><ListedBooks books={books}></ListedBooks></div>}
+      {content === null && <div className="info"><WelcomeToProfile></WelcomeToProfile></div>}  
+      {content === 'My Details'  && <div className="info"><MyDetails firstName={firstName} lastName={lastName} email={email} password={password}></MyDetails></div>}
+      {content === 'View Orders' && <div className="info"><OrderHistory orders={orders}></OrderHistory></div>}
+      {content === 'My Listed Books' && <div className="info"><ListedBooks books={books}></ListedBooks></div>}
     </div>
       </div>
       
