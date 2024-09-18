@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import UserData from '../components/UserData/index';
-import { useQuery } from '@apollo/client';
+import { HttpLink, useQuery } from '@apollo/client';
 import { QUERY_USER } from '../utils/queries';
+
 
 function Profile() {
     const { data, loading, error } = useQuery(QUERY_USER);
@@ -24,6 +25,7 @@ return (
                 <UserData firstName={firstName} lastName={lastName} email={email} password={password} books={books} orders={orders}/>
              ) }
             </div>
+            
           </div>
         </main>
       );

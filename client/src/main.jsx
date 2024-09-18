@@ -37,6 +37,10 @@ const router = createBrowserRouter([
       {
         path: '/profile',
         element: <Profile />
+      },
+      {
+        path: '/add-book',
+        element: <AddBookForm />
       }, {
         path: '/orderHistory',
         element: <OrderHistory />
