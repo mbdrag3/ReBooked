@@ -2,29 +2,45 @@ import BookList from "../components/BookList";
 import HotBooks from "../components/HotBooks";
 import Cart from "../components/Cart";
 import { useEffect, useState } from "react";
-import { QUERY_BOOKS_BY_NAME } from "../utils/queries";
-import { useLazyQuery } from "@apollo/client";
-import { QUERY_BOOKS_BY_NAME } from "../utils/queries";
+import { QUERY_BOOKS_BY_NAME, QUERY_ALL_BOOKS } from "../utils/queries";
+import { useLazyQuery, useQuery } from "@apollo/client";
 
 const Home = () => {
   const [searchTerm, setSearchTerm] = useState(""); // managing search input
   const [filteredBooks, setFilteredBooks] = useState([]); // filtered books
-  
-  const [getBooksByName, { loading, data }] = useLazyQuery(QUERY_BOOKS_BY_NAME);
 
+  // Fetch all books when the page loads
+  const { loading: loadingAllBooks, data: allBooksData } = useQuery(QUERY_ALL_BOOKS);
+  
+  // Lazy query for searching books by name
+  const [getBooksByName, { loading: loadingSearch, data: searchData }] = useLazyQuery(QUERY_BOOKS_BY_NAME);
+
+  // Set filtered books when searchData is received
+  useEffect(() => {
+    if (searchData && searchData.getBookByName) {
+      setFilteredBooks(searchData.getBookByName);
+    }
+  }, [searchData]);
+
+  // Set all books on initial load
+  useEffect(() => {
+    if (allBooksData && allBooksData.allBooks) {
+      setFilteredBooks(allBooksData.allBooks); // Show all books by default
+    }
+  }, [allBooksData]);
 
   const handleSearch = () => {
-    getBooksByName({ variables: { name: searchTerm } }); 
+    if (searchTerm) {
+      getBooksByName({ variables: { name: searchTerm } });
+    } else {
+      setFilteredBooks(allBooksData.allBooks); // Reset to all books if search is cleared
+    }
   };
 
-  if (data && data.getBookByName !== filteredBooks) {
-    setFilteredBooks(data.getBookByName);
-  }
-  
   const handleInputChange = (event) => {
-    setSearchTerm(event.target.value); 
+    setSearchTerm(event.target.value);
   };
-  
+
   return (
     <div className="container">
       <HotBooks />
@@ -39,8 +55,8 @@ const Home = () => {
         <button onClick={handleSearch}>Search</button>
       </div>
 
-      {/* Show loading spinner or message while loading */}
-      {loading && <p>Loading books...</p>}
+      {/* Show loading spinner */}
+      {(loadingAllBooks || loadingSearch) && <p>Loading books...</p>}
 
       {/* Render BookList with filtered books */}
       <BookList filteredBooks={filteredBooks} />
@@ -51,6 +67,7 @@ const Home = () => {
 };
 
 export default Home;
+
 
 // const fetchedBooks = async () => {
 //   try {
