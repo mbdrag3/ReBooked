@@ -102,21 +102,48 @@ query AllBooks($id: ID!) {
 
 export const QUERY_USER = gql`
   {
-    user {
-      firstName
-      lastName
-      orders {
+  user {
+    firstName
+    lastName
+    email
+    password
+    books {
+      price
+      name
+      image
+      condition
+      comment {
+        comment
         _id
-        purchaseDate
-        products {
-          _id
-          name
-          description
-          price
-          quantity
-          image
-        }
+      }
+      category {
+        name
+        _id
+      }
+      author
+      _id
+      userId {
+        lastName
+        firstName
+        email
+        _id
       }
     }
+    orders {
+      purchaseDate
+      books {
+        price
+        name
+        author
+        image
+        condition
+        comment {
+          comment
+          _id
+        }
+      }
+      _id
+    }
   }
+}
 `;

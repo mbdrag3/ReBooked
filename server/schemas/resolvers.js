@@ -78,6 +78,7 @@ const resolvers = {
     // Find logged-in user
     user: async (parent, args, context) => {
       if (context.user) {
+
         const user = await User.findById(context.user._id)
           .populate({
             path: 'orders.books',
@@ -199,6 +200,7 @@ const resolvers = {
       }
       throw AuthenticationError;
     },
+      
 
     addComment: async (parent, { bookId, comment }, context) => {
       if (context.user) {

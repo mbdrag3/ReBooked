@@ -49,6 +49,23 @@ export const ADD_USER = gql`
     }
   }
 `;
+<<<<<<< HEAD
+export const UPDATE_USER = gql`
+  mutation updateUser(
+    $firstName: String
+    $lastName: String
+    $email: String
+    $password: String
+  ) {
+    updateUser(
+      firstName: $firstName
+      lastName: $lastName
+      email: $email
+      password: $password
+    ) 
+  }
+`;
+=======
 
 export const ADD_COMMENT = gql`
   mutation AddComment($bookId: ID!, $comment: String!) {
@@ -63,5 +80,5 @@ export const ADD_COMMENT = gql`
 `
 
 
+>>>>>>> d588a1e3167928b06adeacc0f7ba0e7d2c8e5086
 //UPDATE_BOOKS
-//

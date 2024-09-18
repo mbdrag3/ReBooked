@@ -4,6 +4,11 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 import App from './App.jsx';
 import Home from './pages/Home';
+<<<<<<< HEAD
+import Profile from './pages/Profile';
+import Detail from './pages/Detail';
+=======
+>>>>>>> d588a1e3167928b06adeacc0f7ba0e7d2c8e5086
 import NoMatch from './pages/NoMatch';
 import About from './pages/About';
 import Login from './pages/Login';
@@ -32,10 +37,10 @@ const router = createBrowserRouter([
         path: '/success',
         element: <Success />
       },
-      /*{
+      {
         path: '/profile',
         element: <Profile />
-      },*/ {
+      }, {
         path: '/orderHistory',
         element: <OrderHistory />
       }, {
