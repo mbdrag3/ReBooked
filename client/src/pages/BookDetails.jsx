@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { useMutation } from '@apollo/client';
-import { useQuery } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import { useParams } from "react-router-dom";
 import { useStoreContext } from '../utils/GlobalState';
 import { ADD_TO_CART, UPDATE_CART_QUANTITY, TOGGLE_CART } from '../utils/actions';
@@ -37,6 +36,7 @@ const BookDetails = () => {
     return <p>No book details available.</p>;
   }
 
+  // Use optional chaining (?.) to safely access nested properties
   const { name, author, category, condition, image, price, userId, comment } = data.getBookById;
 
   const addToCart = () => {
@@ -46,8 +46,6 @@ const BookDetails = () => {
     const itemInCart = cart.find((cartItem) => cartItem._id === _id);
   
     if (itemInCart) {
-      console.log('Item is already in the cart. Updating quantity.');
-  
       dispatch({
         type: UPDATE_CART_QUANTITY,
         _id: _id,
@@ -59,8 +57,6 @@ const BookDetails = () => {
         purchaseQuantity: parseInt(itemInCart.purchaseQuantity) + 1
       });
     } else {
-      console.log('Adding new item to the cart.');
-  
       dispatch({
         type: ADD_TO_CART,
         book: {
@@ -108,14 +104,14 @@ const BookDetails = () => {
         <div className="book-details">
           <h1>{name}</h1>
           <p>Author: {author}</p>
-          <p>Subject: {category.name}</p>
+          <p>Subject: {category?.name || 'Unknown'}</p> {/* Use optional chaining */}
           <p>Condition: {condition}</p>
           <p>Price: ${price}</p>
 
           {/* Book Owner */}
           <div className="book-owner">
             {userId ? (
-              <h3>Posted by: {userId.firstName} {userId.lastName}</h3>
+              <h3>Posted by: {userId?.firstName || 'Anonymous'} {userId?.lastName || ''}</h3>
             ) : (
               <h3>Posted by: Anonymous</h3>
             )}
@@ -148,11 +144,11 @@ const BookDetails = () => {
           <p>** Please log in to add a comment. ** </p>
         )}
 
-        {comment.length > 0 ? (
+        {comment?.length > 0 ? (
           <ul>
             {comment.map((c, index) => (
               <li key={index}>
-                <strong>{c.userId.firstName}:</strong> {c.comment}
+                <strong>{c?.userId?.firstName || 'Anonymous'}:</strong> {c?.comment}
               </li>
             ))}
           </ul>
