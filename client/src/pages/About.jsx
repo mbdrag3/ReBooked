@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import './About.css'; // Create this file for styling
+import './about.css'; // Create this file for styling
 import { Link } from "react-router-dom";
 import Auth from "../utils/auth";
 
