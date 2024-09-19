@@ -6,7 +6,7 @@ const seedComments = require('./commentSeeds');
 const seedOrders = require('./orderSeeds'); // Import order seeds
 
 
-mongoose.connect('mongodb://localhost:27017/reBooked');
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/reBooked');
 
 const seedAll = async () => {
   try {
